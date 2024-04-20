@@ -100,12 +100,25 @@ class ImageRepo():
 		"""
 		Prints a table containing the repo's basic statistics
 		"""
+		print("Repository Data:")
+		print("Classes: " + str(list(self.data_by_class.keys())) + " (" + str(len(self.data_by_class)) + ")")
+		print("Number of images:", len(self.data_df))
+		print("Image resolution: (3024 lines x 4032 columns)")
+		print("Database size: 461,5MB")
 	
 	def print_class_based_info(self):
 		"""
 		Prints a table containing info on the statistics for
 		every class on the repository
 		"""
+		
+		print(f'{"Class": <10}|Objects|Repetitions|No. Samples|{"Background Variations": <25}|{"Light Variations": <35}')
+		print(110 * "=")
+		for label in self.data_by_class:
+			no_samples = len(self.data_by_class[label]["images"])
+			backs = self.data_by_class[label]["backs"]
+			lights = self.data_by_class[label]["lights"]
+			print(f'{label: <10}|{"1": ^7}|{"3": ^11}|{no_samples: ^11}|{str(backs): <25}|{str(lights): <35}')
 
 def draw_image_grid(images,rows,cols,titles=None):
 	"""
