@@ -8,13 +8,14 @@ import math
 
 class ImageRepo():
 	"""
-	Represents the interface to the project's image repository.
-	Holds reference to every ca	
+	Represents the interface to one of the project's image repositories.
+	Holds reference to every photo and metadata	
 	"""
 
-	def __init__(self) -> None:
+	def __init__(self, path_to_images: str) -> None:
 		self.data_df = pd.read_csv("./metadata/img_data.csv",sep=';')
 		self.indexed_df = self.data_df.set_index("img")
+		self.path_to_images = path_to_images
 		data_by_class = {}
 
 		for row in self.data_df.values:
@@ -64,7 +65,7 @@ class ImageRepo():
 		cols = 10
 		rows = math.ceil(len(self.data_df)/10)
 
-		draw_image_grid(self.data_df["img"].values,rows,cols)
+		draw_image_grid(self.data_df["img"].values,rows,cols,self.path_to_images)
 
 	def draw_class_samples(self,label,samples=None,rows=2):
 		"""
@@ -78,7 +79,7 @@ class ImageRepo():
 			images = images[:samples]
 		
 		cols = math.ceil(len(images)/rows)
-		draw_image_grid(images,rows,cols)
+		draw_image_grid(images,rows,cols,self.path_to_images)
 	
 	def draw_every_class(self):
 		"""
@@ -94,7 +95,7 @@ class ImageRepo():
 		
 		cols = 5
 		rows = math.ceil(len(images)/cols)
-		draw_image_grid(images,rows,cols,titles=titles)
+		draw_image_grid(images,rows,cols,self.path_to_images,titles=titles)
 
 	def print_repo_stats(self):
 		"""
@@ -120,7 +121,7 @@ class ImageRepo():
 			lights = self.data_by_class[label]["lights"]
 			print(f'{label: <10}|{"1": ^7}|{"3": ^11}|{no_samples: ^11}|{str(backs): <25}|{str(lights): <35}')
 
-def draw_image_grid(images,rows,cols,titles=None):
+def draw_image_grid(images,rows,cols,path_to,titles=None):
 	"""
 	Draws a grid of images
 	"""
@@ -130,7 +131,7 @@ def draw_image_grid(images,rows,cols,titles=None):
 	for k in range(len(images)):
 		image = images[k]
 
-		with open("./images/" + image,"rb") as img_file:
+		with open(path_to + image,"rb") as img_file:
 			axs[i,j].imshow(img.imread(img_file))
 		if titles is not None:
 			axs[i,j].set_title(titles[k])
