@@ -2,6 +2,7 @@
 Module responsible for housing the ImageRepo class
 """
 import pandas as pd
+import os
 import matplotlib.pyplot as plt
 import matplotlib.image as img
 import math
@@ -40,6 +41,10 @@ class ImageRepo():
 						label_data["lights"].append(light)
 		
 		self.data_by_class = data_by_class
+
+	def get_paths_from_all_images(self):
+		"""Returns a list with every image name from the repo"""
+		return [ self.path_to_images+"/"+file_name for file_name in os.listdir(self.path_to_images)]
 
 	def get_images_with_class(self, class_label):
 		"""
