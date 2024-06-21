@@ -62,7 +62,7 @@ class ImageRepo():
 	
 		return self.indexed_df.loc[image]["labels"]
 
-	def draw_whole_database(self,cols=10):
+	def draw_whole_database(self,cols=10,force_gray=False):
 		"""
 		Draws every image in the database in a matrix with cols columns
 		"""
@@ -70,9 +70,9 @@ class ImageRepo():
 		cols = 10
 		rows = math.ceil(len(self.data_df)/10)
 
-		draw_image_grid(self.data_df["img"].values,rows,cols,self.path_to_images)
+		draw_image_grid(self.data_df["img"].values,rows,cols,self.path_to_images,force_gray=force_gray)
 
-	def draw_class_samples(self,label,samples=None,rows=2):
+	def draw_class_samples(self,label,samples=None,rows=2,force_gray=False):
 		"""
 		Draws a couple of images with the given label
 		"""
@@ -84,9 +84,9 @@ class ImageRepo():
 			images = images[:samples]
 		
 		cols = math.ceil(len(images)/rows)
-		draw_image_grid(images,rows,cols,self.path_to_images)
+		draw_image_grid(images,rows,cols,self.path_to_images,force_gray=force_gray)
 	
-	def draw_every_class(self):
+	def draw_every_class(self,force_gray=False):
 		"""
 		Draws an image of every class in the database
 		"""
@@ -100,7 +100,7 @@ class ImageRepo():
 		
 		cols = 5
 		rows = math.ceil(len(images)/cols)
-		draw_image_grid(images,rows,cols,self.path_to_images,titles=titles)
+		draw_image_grid(images,rows,cols,self.path_to_images,titles=titles,force_gray=force_gray)
 
 	def print_repo_stats(self):
 		"""
@@ -126,7 +126,7 @@ class ImageRepo():
 			lights = self.data_by_class[label]["lights"]
 			print(f'{label: <10}|{"1": ^7}|{"3": ^11}|{no_samples: ^11}|{str(backs): <25}|{str(lights): <35}')
 
-def draw_image_grid(images,rows,cols,path_to,titles=None):
+def draw_image_grid(images,rows,cols,path_to,titles=None, force_gray=False):
 	"""
 	Draws a grid of images
 	"""
@@ -137,7 +137,10 @@ def draw_image_grid(images,rows,cols,path_to,titles=None):
 		image = images[k]
 
 		with open(path_to + image,"rb") as img_file:
-			axs[i,j].imshow(img.imread(img_file))
+			if(force_gray):
+				axs[i,j].imshow(img.imread(img_file),cmap="gray")
+			else:
+				axs[i,j].imshow(img.imread(img_file))
 		if titles is not None:
 			axs[i,j].set_title(titles[k])
 		axs[i,j].axis('off')
