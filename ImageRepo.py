@@ -54,6 +54,26 @@ class ImageRepo():
 
 		return self.data_by_class[class_label]["images"]
 
+	def get_all_images_and_lightning(self):
+		"""
+		Retrieves every image along with its lighting condition
+		"""
+
+		results = []
+
+		for row in self.data_df.values:
+			img_name =  self.path_to_images+"/"+row[0]
+			light = row[2]
+			results.append((img_name,light))
+		
+		return results
+
+	def get_repo_path(self):
+		"""
+		Retrieves the path to the repository's contents.
+		"""
+		return self.path_to_images
+
 	def get_image_labels(self, image):
 		"""
 		Returns a list with every class label appliable to the 
